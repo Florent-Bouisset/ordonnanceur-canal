@@ -1,5 +1,5 @@
 export interface IRequestExecution {
-  requestStatus: string;
+  requestStatus: "waiting" | "in progress";
   request: IRequest;
   execute(): Promise<Response>;
 }
@@ -8,14 +8,13 @@ export class RequestScheduler {
   requestMap: Map<IRequest, IRequestExecution> = new Map();
   constructor() {}
 
-  createExecution(request: IRequest) {
+  createExecution(request: IRequest): IRequestExecution {
     return {
       requestStatus: "waiting",
       request: request,
       async execute() {
         this.requestStatus = "in progress";
         const result = await fetch(request.url);
-        this.requestStatus = "done";
         return result;
       },
     };
@@ -34,6 +33,7 @@ export class RequestScheduler {
         requestsToExecute.push(req);
       }
     }
+    requestsToExecute.filter((req) => req.requestStatus === "waiting");
     return requestsToExecute;
   }
 
