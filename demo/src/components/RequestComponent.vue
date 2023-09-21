@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = defineProps<{ priority: number; status: string }>();
+const props = defineProps<{
+  requestId: string;
+  priority: number;
+  status: string;
+}>();
 
 const getColor = computed(() => {
   switch (props.priority) {
@@ -25,6 +29,7 @@ const getColor = computed(() => {
 
 <template>
   <tr>
+    <td>{{ requestId }}</td>
     <td :style="`color: ${getColor}`">{{ priority }}</td>
     <td>{{ status }}</td>
   </tr>
