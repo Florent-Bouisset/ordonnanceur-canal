@@ -1,5 +1,6 @@
-interface IRequestExecution {
+export interface IRequestExecution {
   requestStatus: string;
+  request: IRequest;
   execute(): Promise<Response>;
 }
 
@@ -10,6 +11,7 @@ export class RequestScheduler {
   createExecution(request: IRequest) {
     return {
       requestStatus: "waiting",
+      request: request,
       async execute() {
         this.requestStatus = "in progress";
         const result = await fetch(request.url);
@@ -19,6 +21,22 @@ export class RequestScheduler {
     };
   }
 
+  getRequestsToExecute() {
+    const iterator = this.requestMap.values();
+    let maxPriority = 0;
+    let requestsToExecute: IRequestExecution[] = [];
+
+    for (const req of iterator) {
+      if (req.request.priority > maxPriority) {
+        maxPriority = req.request.priority;
+        requestsToExecute = [req];
+      } else if (req.request.priority === maxPriority) {
+        requestsToExecute.push(req);
+      }
+    }
+    return requestsToExecute;
+  }
+
   addRequest(request: IRequest) {
     // TO DO: need to set multiple request at once
     // if (Array.isArray(request)) {
@@ -26,7 +44,6 @@ export class RequestScheduler {
     // } else {
     // this.requestMap.set(request);
     // }
-
     const requestExecution = this.createExecution(request);
     this.requestMap.set(request, requestExecution);
 
