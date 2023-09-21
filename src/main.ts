@@ -14,3 +14,20 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 `;
 
 displayRequest(document.querySelector<HTMLElement>("#display")!);
+
+import { RequestScheduler } from "./lib/request_scheduler";
+
+const scheduler = new RequestScheduler();
+
+const req1 = scheduler.createExecution({
+  priority: 1,
+  url: "https://rickandmortyapi.com/api/character/2",
+});
+
+console.log(req1);
+
+const res = req1.execute();
+console.log(req1);
+
+const json = await (await res).json();
+console.log(json);
