@@ -44,10 +44,15 @@ class Task implements ITask {
       );
     }
     this.requestStatus = "in progress";
-    const response = await this.fetchFunction(this.request.url, {
-      signal: this.abortController.signal,
-    });
-    this.deferred.resolve(response);
+    try {
+      const response = await this.fetchFunction(this.request.url, {
+        signal: this.abortController.signal,
+      });
+      this.deferred.resolve(response);
+    } catch (err) {
+      console.error("failed to fetch");
+      this.deferred.reject(err);
+    }
   }
 }
 
@@ -135,5 +140,3 @@ export class RequestScheduler {
     }
   }
 }
-
-// TO DO handle error
