@@ -12,7 +12,7 @@ const delayedFetch = (url: string, { signal }: { signal: AbortSignal }) => {
           signal: signal,
         })
       ).json();
-      const timeout = setTimeout(() => resolve(res.name), 10000);
+      const timeout = setTimeout(() => resolve(res.name), 5000);
       signal.addEventListener(
         "abort",
         () => {

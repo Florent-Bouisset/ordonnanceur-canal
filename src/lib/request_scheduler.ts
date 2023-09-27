@@ -111,8 +111,9 @@ export class RequestScheduler {
         tasksArray.push(task);
         this.requestMap.set(req, task);
       }
+      const taskResponse = tasksArray.map((task) => task.response);
       this.executeNextRequests();
-      return tasksArray.map((task) => task.response);
+      return taskResponse;
     } else {
       const requestExecution = new Task(request, this.fetchFunction);
       this.requestMap.set(request, requestExecution);
