@@ -73,6 +73,7 @@ export class RequestScheduler {
 
   async executeNextRequests() {
     const nextRequests = this.getRequestsToExecute();
+    // allSettled is used instead of all to move on even if there is failed requests
     await Promise.allSettled(
       nextRequests.map((req) =>
         // finished request are removed
@@ -108,17 +109,12 @@ export class RequestScheduler {
 
   getRequestStatus(request: IRequest) {
     const task = this.requestMap.get(request);
-    console.log("map", this.requestMap);
-
-    console.log("task", task);
-
     if (!task) return null;
     return task.requestStatus;
   }
 
   cancelRequest(request: IRequest) {
     const status = this.getRequestStatus(request);
-    console.log("cancel", status);
     if (status === "waiting") {
       // if the request is waiting, just delete it
       this.removeTask(request);

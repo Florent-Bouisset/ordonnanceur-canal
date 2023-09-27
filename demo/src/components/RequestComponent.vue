@@ -32,5 +32,8 @@ const getColor = computed(() => {
     <td>{{ requestId }}</td>
     <td :style="`color: ${getColor}`">{{ priority }}</td>
     <td>{{ status }}</td>
+    <td>
+      <button style="color: red" @click="$emit('cancel')">Cancel</button>
+    </td>
   </tr>
 </template>

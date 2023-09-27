@@ -24,10 +24,6 @@ const req1 = scheduler.createExecution({
   url: "https://rickandmortyapi.com/api/character/2",
 });
 
-console.log(req1);
-
-console.log("req to execute", scheduler.getRequestsToExecute());
-
 const res = req1.execute();
 console.log(req1);
 

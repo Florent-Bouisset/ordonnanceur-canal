@@ -2,6 +2,7 @@
 import RequestComponent from "./components/RequestComponent.vue";
 import { RequestScheduler } from "../../src/lib/main";
 import { computed, ref } from "vue";
+import { IRequest } from "../../src/lib/request_scheduler";
 
 const scheduler = ref(new RequestScheduler());
 
@@ -10,7 +11,7 @@ const req1 = {
   url: "https://rickandmortyapi.com/api/character/5",
 };
 
-const exampleCall = scheduler.value.addRequest([
+scheduler.value.addRequest([
   req1,
   {
     priority: 3,
@@ -30,14 +31,11 @@ const exampleCall = scheduler.value.addRequest([
   },
 ]) as Array<Promise<any>>;
 
-scheduler.value.cancelRequest(req1);
-
-exampleCall.map((item) => item.then((value) => console.log(value)));
+// scheduler.value.cancelRequest(req1);
 
 const requestArray = computed(() =>
   Array.from(scheduler.value.requestMap.values())
 );
-const nextRequests = computed(() => scheduler.value.getRequestsToExecute());
 
 // Adding new request with
 const addRequestHandler = (priority: number) => {
@@ -45,6 +43,10 @@ const addRequestHandler = (priority: number) => {
     priority: priority,
     url: "https://rickandmortyapi.com/api/character/3",
   });
+};
+
+const handleCancel = (request: IRequest) => {
+  scheduler.value.cancelRequest(request);
 };
 </script>
 
@@ -90,24 +92,7 @@ const addRequestHandler = (priority: number) => {
           :requestId="req.id"
           :priority="req.request.priority"
           :status="req.requestStatus"
-        ></RequestComponent>
-      </tbody>
-    </table>
-
-    <h2 style="margin-top: 60px">Next requests to execute</h2>
-    <table>
-      <thead>
-        <td>ID</td>
-        <td>Priority</td>
-        <td>Status</td>
-      </thead>
-      <tbody>
-        <RequestComponent
-          v-for="(req, index) in nextRequests"
-          :key="index"
-          :requestId="req.id"
-          :priority="req.request.priority"
-          :status="req.requestStatus"
+          @cancel="handleCancel(req.request)"
         ></RequestComponent>
       </tbody>
     </table>
