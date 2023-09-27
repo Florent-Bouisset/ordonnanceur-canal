@@ -20,10 +20,16 @@ export function delayedFetch(
           }
         )
       ).json();
-      console.log("res", res);
-      setTimeout(() => resolve(res.name), 10000);
+      const timeout = setTimeout(() => resolve(res.name), 10000);
+      signal.addEventListener(
+        "abort",
+        () => {
+          clearTimeout(timeout), reject("cancelled");
+        },
+        {}
+      );
     } catch (err) {
-      console.log("err", err);
+      console.error("error: ", err);
       reject(err);
     }
   });
