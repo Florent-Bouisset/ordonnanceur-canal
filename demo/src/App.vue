@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RequestComponent from "./components/RequestComponent.vue";
-import { RequestScheduler } from "../../src/lib/main";
+import { RequestScheduler } from "../../src/lib/main"; // or from "rx-scheduler" if using npm link
 import { computed, ref } from "vue";
 import { IRequest } from "../../src/lib/request_scheduler";
 

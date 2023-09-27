@@ -1,16 +1,28 @@
 {
   "name": "rx-scheduler",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/rx-scheduler.umd.cjs",
+  "module": "./dist/rx-scheduler.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/rx-scheduler.js",
+      "require": "./dist/rx-scheduler.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/node": "^20.6.3",
+    "@types/node": "^20.7.0",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-plugin-dts": "^3.6.0"
   }
 }

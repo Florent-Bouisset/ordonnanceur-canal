@@ -1,9 +1,20 @@
 # REQUEST SCHEDULER API
 
-This library allow to execute several HTTP requests in a particular order depending on the priority level
+This library allow to execute several HTTP requests in a particular order depending on the priority level.
 
 
-## How to use
+## Demo
+You can have a visual demo of the API usage by starting the demo App
+```sh
+cd demo
+npm install
+npm run dev
+```
+Then visit the url provided in your console.
+
+## API Usage
+
+You can find and example of code using the library at `/src/example.ts`
 
 ### Create a Scheduler instance
 First create an instance of the scheduler
@@ -128,11 +139,7 @@ const schedulerWithDelay = new RequestScheduler(delayedFetch);
 
 
 
+## Resources used for this project
 
-
-
-
-
-
-Documentations utilisés :
-https://vitejs.dev/guide/build.html#library-mode
+Build tool: https://vitejs.dev/guide/build.html#library-mode
+Creating a library: https://onderonur.netlify.app/blog/creating-a-typescript-library-with-vite/
