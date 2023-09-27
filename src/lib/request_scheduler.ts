@@ -21,8 +21,11 @@ class Task implements ITask {
   request: IRequest;
   deferred: { resolve: (value: any) => void; reject: (reason?: any) => void };
   abortController: AbortController;
-
-  constructor(request: IRequest) {
+  fetchFunction: (...args: any[]) => Promise<any>;
+  constructor(
+    request: IRequest,
+    fetchFunction: (...args: any[]) => Promise<any>
+  ) {
     this.id = randomId(6);
     this.requestStatus = "waiting";
     this.request = request;
@@ -31,6 +34,7 @@ class Task implements ITask {
     this.response = new Promise(
       (resolve, reject) => (this.deferred = { resolve, reject })
     );
+    this.fetchFunction = fetchFunction;
   }
 
   async execute() {
@@ -40,7 +44,7 @@ class Task implements ITask {
       );
     }
     this.requestStatus = "in progress";
-    const response = await delayedFetch(this.request.url, {
+    const response = await this.fetchFunction(this.request.url, {
       signal: this.abortController.signal,
     });
     this.deferred.resolve(response);
@@ -49,7 +53,10 @@ class Task implements ITask {
 
 export class RequestScheduler {
   requestMap: Map<IRequest, ITask> = new Map();
-  constructor() {}
+  fetchFunction: (...args: any[]) => Promise<any>;
+  constructor(fetchFunction: (...args: any[]) => Promise<any>) {
+    this.fetchFunction = fetchFunction;
+  }
 
   getRequestsToExecute() {
     // get the list of request that can be executed now
@@ -93,14 +100,14 @@ export class RequestScheduler {
     if (Array.isArray(request)) {
       const tasksArray = [];
       for (const req of request) {
-        const task = new Task(req);
+        const task = new Task(req, this.fetchFunction);
         tasksArray.push(task);
         this.requestMap.set(req, task);
       }
       this.executeNextRequests();
       return tasksArray.map((task) => task.response);
     } else {
-      const requestExecution = new Task(request);
+      const requestExecution = new Task(request, this.fetchFunction);
       this.requestMap.set(request, requestExecution);
       this.executeNextRequests();
       return requestExecution.response;

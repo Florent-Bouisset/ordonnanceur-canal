@@ -5,20 +5,13 @@ export function randomId(length = 6) {
     .substring(2, length + 2);
 }
 
-export function delayedFetch(
-  input: string,
-  { signal }: { signal: AbortSignal }
-) {
-  const randomNumber = Math.floor(Math.random() * 100) + 1;
+export function delayedFetch(url: string, { signal }: { signal: AbortSignal }) {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await (
-        await fetch(
-          `https://rickandmortyapi.com/api/character/${randomNumber}`,
-          {
-            signal: signal,
-          }
-        )
+        await fetch(url, {
+          signal: signal,
+        })
       ).json();
       const timeout = setTimeout(() => resolve(res.name), 10000);
       signal.addEventListener(

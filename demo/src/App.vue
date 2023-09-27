@@ -4,7 +4,30 @@ import { RequestScheduler } from "../../src/lib/main";
 import { computed, ref } from "vue";
 import { IRequest } from "../../src/lib/request_scheduler";
 
-const scheduler = ref(new RequestScheduler());
+const delayedFetch = (url: string, { signal }: { signal: AbortSignal }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await (
+        await fetch(url, {
+          signal: signal,
+        })
+      ).json();
+      const timeout = setTimeout(() => resolve(res.name), 10000);
+      signal.addEventListener(
+        "abort",
+        () => {
+          clearTimeout(timeout), reject("cancelled");
+        },
+        {}
+      );
+    } catch (err) {
+      console.error("error: ", err);
+      reject(err);
+    }
+  });
+};
+
+const scheduler = ref(new RequestScheduler(delayedFetch));
 
 const req1 = {
   priority: 4,
@@ -39,9 +62,11 @@ const requestArray = computed(() =>
 
 // Adding new request with
 const addRequestHandler = (priority: number) => {
+  const randomNumber = Math.floor(Math.random() * 100) + 1;
+
   scheduler.value.addRequest({
     priority: priority,
-    url: "https://rickandmortyapi.com/api/character/3",
+    url: `https://rickandmortyapi.com/api/character/${randomNumber}`,
   });
 };
 
