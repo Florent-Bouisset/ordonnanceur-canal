@@ -4,7 +4,9 @@ This library allow to execute several HTTP requests in a particular order depend
 
 
 ## Demo
-You can have a visual demo of the API usage by starting the demo App
+You can have a visual demo of the API usage by visiting the demo App: [ordonnanceur-canal.vercel.app](https://ordonnanceur-canal.vercel.app/)
+
+Or by starting the app locally:
 ```sh
 cd demo
 npm install
