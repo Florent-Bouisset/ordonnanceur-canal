@@ -1,4 +1,4 @@
-import { randomId, delayedFetch } from "./utils.ts";
+import { randomId, defaultFetchFunction } from "./utils.ts";
 
 export interface IRequest {
   priority: number; // the higher is highest priority
@@ -54,7 +54,9 @@ class Task implements ITask {
 export class RequestScheduler {
   requestMap: Map<IRequest, ITask> = new Map();
   fetchFunction: (...args: any[]) => Promise<any>;
-  constructor(fetchFunction: (...args: any[]) => Promise<any>) {
+  constructor(
+    fetchFunction: (...args: any) => Promise<any> = defaultFetchFunction
+  ) {
     this.fetchFunction = fetchFunction;
   }
 
@@ -134,4 +136,4 @@ export class RequestScheduler {
   }
 }
 
-// TO DO make it agnostic from 'fetch'
+// TO DO handle error

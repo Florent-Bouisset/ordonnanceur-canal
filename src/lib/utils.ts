@@ -5,7 +5,10 @@ export function randomId(length = 6) {
     .substring(2, length + 2);
 }
 
-export function delayedFetch(url: string, { signal }: { signal: AbortSignal }) {
+export function defaultFetchFunction(
+  url: string,
+  { signal }: { signal: AbortSignal }
+) {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await (
@@ -13,14 +16,7 @@ export function delayedFetch(url: string, { signal }: { signal: AbortSignal }) {
           signal: signal,
         })
       ).json();
-      const timeout = setTimeout(() => resolve(res.name), 10000);
-      signal.addEventListener(
-        "abort",
-        () => {
-          clearTimeout(timeout), reject("cancelled");
-        },
-        {}
-      );
+      resolve(res);
     } catch (err) {
       console.error("error: ", err);
       reject(err);
